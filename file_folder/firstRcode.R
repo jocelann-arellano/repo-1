@@ -5,3 +5,6 @@ addAge = giannAge + joAge
 
 mulAge = giannAge * joAge
 mulAge
+
+subAge = giannAge - joAge
+subAge
