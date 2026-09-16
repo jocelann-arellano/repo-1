@@ -8,3 +8,6 @@ mulAge
 
 subAge = giannAge - joAge
 subAge
+
+divAge = giannAge/joAge
+divAge
