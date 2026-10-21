@@ -1,0 +1,16 @@
+---
+title: "R_exercise_3"
+author: "Jocel Ann Arellano"
+date: "2026-10-14"
+output: html_document
+---
+## PART A
+
+TODO: Create a numeric vector called scores containing: 88, 92, 79, 95, 84
+Then create a character vector called subjects containing:
+"Math", "Science", "English", "History", "PE"
+
+```{r}
+
+```
+
