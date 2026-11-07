@@ -1,0 +1,135 @@
+---
+title: "R Lab: Basic Operation of R Programming"
+author: "Jocel Ann Arellano"
+output: html_document
+---
+
+##Part A
+Question #1
+
+The table below shows the data about shoe size and height. Create a data frame. Save it as shoesize.csv
+```{r}
+shoe_data <- data.frame(
+  ShoeSize = c(6.5, 9.0, 8.5, 8.5, 10.5, 7.0, 9.5, 9.0, 13.0, 7.5, 10.5, 8.5, 12.0, 10.5,
+               13.0, 11.5, 8.5, 5.0, 10.0, 6.5, 7.5, 8.5, 10.5, 8.5, 10.5, 11.0, 9.0, 13.0),
+  Height = c(66.0, 68.0, 64.5, 65.0, 70.0, 64.0, 70.0, 71.0, 72.0, 64.0, 74.5, 67.0, 71.0, 71.0,
+             77.0, 72.0, 59.0, 62.0, 72.0, 66.0, 64.0, 67.0, 73.0, 69.0, 72.0, 70.0, 69.0, 70.0),
+  Gender = c("F", "F", "F", "F", "M", "F", "F", "F", "M", "F", "M", "F", "M", "M",
+             "M", "M", "F", "F", "M", "F", "F", "M", "M", "F", "M", "M", "M", "M")
+)
+
+# Export data frame to CSV
+write.csv(shoe_data, file = "shoesize.csv", row.names = FALSE)
+```
+b. Import the saved CSV into the R environment and display the last 5 rows
+
+```{r}
+shoes <- read.csv("shoesize.csv")
+
+tail(shoes, n = 5)
+```
+c. Describe the data by showing its structure and content
+```{r}
+# Display data structure
+str(shoes)
+
+# Display content preview
+head(shoes)
+```
+Answer: str(shoes) shows a data frame containing 28 observations across 3 variables: ShoeSize (numeric), Height (numeric), and Gender (character/factor).
+
+head(shoes) displays the first six records of the dataset.
+
+d. Inspect its dimensions. How many rows? How about columns?
+```{r}
+dim(shoes)
+nrow(shoes)
+ncol(shoes)
+```
+e. Inspect using summary(). What is the difference between summary() and str()?
+```{r}
+summary(shoes)
+```
+Answer: str(): Displays the internal structure of the data object, including data types, object dimensions, and the first few values of each column.
+
+summary(): Provides a statistical overview of each variable in the dataset. For numeric variables, it displays summary statistics (Minimum, 1st Quartile, Median, Mean, 3rd Quartile, Maximum). For categorical/factor variables, it shows counts/frequencies of each group.
+
+f. Create a subset by males and females with their corresponding shoe size and height. Show R scripts and result
+```{r}
+# Create female subset
+female_subset <- subset(shoes, Gender == "F")
+
+# Create male subset
+male_subset <- subset(shoes, Gender == "M")
+
+# View subsets
+female_subset
+male_subset
+```
+g. Find the mean of shoe size and height of the respondents. Write the R scripts and its result.
+```{r}
+# Overall means
+mean_shoe_size <- mean(shoes$ShoeSize)
+mean_height <- mean(shoes$Height)
+
+cat("Mean Shoe Size:", mean_shoe_size, "\n")
+cat("Mean Height:", mean_height, "\n")
+```
+h. Is there a relationship between shoe size and height? Why?
+Answer: Yes. Generally, taller individuals tend to have larger shoe sizes to maintain bodily balance an proportion. 
+
+Question #2
+Task: Create factors for the gender column.
+```{r}
+# Convert Gender column into a factor
+shoes$Gender <- factor(shoes$Gender, levels = c("F", "M"), labels = c("Female", "Male"))
+
+# Verify the factor levels
+str(shoes$Gender)
+```
+Question #3:
+
+When R Markdown knits a document, it uses the folder containing the .Rmd file as the working directory — NOT whatever folder your R console happened to be in beforehand. Why do you think this design choice makes an .Rmd file’s imports more reliable and reproducible when shared with someone else?
+
+Answer: Using relative paths based on the .Rmd directory ensures the code runs on any machine without updating user-specific file paths.
+
+Question #4:
+
+Run str(shoes) and note the type R assigned to the Gender column. Is it what you expected? Explain what could go wrong in later analysis if a column you expected to be numeric (like ShoeSize) was accidentally imported as text (character) instead — for example, because of a stray non-numeric value in the original file.
+```{r}
+str(shoes)
+```
+Answer: If numerical columns like ShoeSize are imported as character, mathematical operations and statistical functions (such as mean(), sum(), sd(), cor(), or linear modeling lm()) will fail and produce type errors (e.g., non-numeric argument to binary operator). Additionally, plotting functions will treat the data as discrete categories rather than continuous values, distorting figures.
+
+Question #5:
+
+Why is it good practice to check BOTH head(shoes) and tail(shoes) after importing a file, instead of just head()? What kind of import problem would head() alone fail to catch?
+
+Answer: head() only verifies initial rows. Checking tail() detects bottom-of-file errors like missing end data, extra blank lines, or trailing summary notes.
+
+Question #6:
+
+a. Compute for the correlation
+```{r}
+cor(shoes$ShoeSize, shoes$Height)
+```
+b. 
+```{r}
+shoes[shoes$ShoeSize >= 11, ]
+```
+Question #7:
+
+Compare the mean height and mean shoe size between the female and male subsets. Describe the pattern you see.
+```{r}
+aggregate(cbind(Height, ShoeSize) ~ Gender, data = shoes, FUN = mean)
+```
+Answer: On average, males in this dataset have both significantly larger shoe sizes and greater heights than females.
+
+Does this dataset support the idea that shoe size and height are related WITHIN each gender group, or could gender itself be an important factor you’d need to account for separately when studying that relationship?
+```{r}
+cor(female_subset$ShoeSize, female_subset$Height)
+cor(male_subset$ShoeSize, male_subset$Height)
+```
+Answer: Gender acts as a confounding variable. The overall strong correlation is driven by gender differences (males scoring higher in both metrics) rather than a true within-group relationship, so gender must be controlled for separately.
+
+
