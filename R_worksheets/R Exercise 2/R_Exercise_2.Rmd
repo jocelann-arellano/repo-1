@@ -228,7 +228,7 @@ Run it and read the error message carefully.
 TODO: Now fix the code above so that "5" + 5 correctly evaluates to 10 using an appropriate conversion function.
 
 ```{r}
-as.numeric("5") + 5
+as.numeric(5) + 5
 ```
 Question #9: Some programming languages automatically convert "5" + 5 into 10 without an error. R does not.
 
